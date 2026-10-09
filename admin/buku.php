@@ -44,9 +44,9 @@ $query = mysqli_query($conn, "SELECT * FROM books ORDER BY id DESC");
                     <td><?= htmlspecialchars($buku['penulis']); ?></td>
                     <td><?= htmlspecialchars($buku['genre'] ?? ''); ?></td>
                     <td>
-                        <a href="edit_buku.php?id=<?= $buku['id']; ?>">Edit</a>
+                        <a href="editBuku.php?id=<?= $buku['id']; ?>">Edit</a>
                         |
-                        <a href="hapus_buku.php?id=<?= $buku['id']; ?>">Hapus</a>
+                        <a href="hapusBuku.php?id=<?= $buku['id']; ?>">Hapus</a>
                     </td>
                 </tr>
             <?php } ?>
