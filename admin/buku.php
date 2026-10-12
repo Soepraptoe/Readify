@@ -17,7 +17,7 @@ $query = mysqli_query($conn, "SELECT * FROM books ORDER BY id DESC");
 
     <p>Daftar buku yang tersimpan di database.</p>
 
-    <a href="tambah_buku.php">+ Tambah Buku</a>
+    <a href="tambahBuku.php">+ Tambah Buku</a>
 
     <br><br>
 
