@@ -1,4 +1,4 @@
-
+```php
 <?php
 session_start();
 
@@ -12,17 +12,21 @@ if (ini_get('session.use_cookies')) {
     setcookie(
         session_name(),
         '',
-        time() - 42000,
-        $params['path'],
-        $params['domain'],
-        $params['secure'],
-        $params['httponly']
+        [
+            'expires'  => time() - 42000,
+            'path'     => $params['path'],
+            'domain'   => $params['domain'],
+            'secure'   => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax'
+        ]
     );
 }
 
-// Akhiri session pengguna
+// Hancurkan session
 session_destroy();
 
-// Kembali ke halaman login Readify
+// Arahkan pengguna ke halaman login Readify
 header('Location: login.php');
 exit;
+```
