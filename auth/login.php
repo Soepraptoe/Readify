@@ -6,6 +6,7 @@ session_start();
 require_once __DIR__ . '/../config/koneksi.php';
 
 $error = '';
+$email = '';
 
 // Jika pengguna sudah login, arahkan ke halaman utama
 if (isset($_SESSION['user_id'])) {
@@ -13,16 +14,20 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Proses login ketika form dikirim
+// Proses login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
+    // Validasi input
     if ($email === '' || $password === '') {
         $error = 'Email dan password wajib diisi.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Format email tidak valid.';
+    } elseif (strlen($email) > 150) {
+        $error = 'Email terlalu panjang.';
     } else {
+        // Cari akun berdasarkan email
         $stmt = $conn->prepare(
             'SELECT id, nama, email, password, role
              FROM users
@@ -30,10 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              LIMIT 1'
         );
 
-        if ($stmt) {
+        if (!$stmt) {
+            $error = 'Terjadi kesalahan. Silakan coba lagi.';
+        } else {
             $stmt->bind_param('s', $email);
 
-            if ($stmt->execute()) {
+            if (!$stmt->execute()) {
+                $error = 'Terjadi kesalahan. Silakan coba lagi.';
+                $stmt->close();
+            } else {
                 $stmt->bind_result(
                     $id,
                     $nama,
@@ -42,16 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $role
                 );
 
+                $akunDitemukan = $stmt->fetch();
+                $stmt->close();
+
+                // Periksa akun dan password
                 if (
-                    $stmt->fetch() &&
+                    $akunDitemukan &&
                     password_verify($password, $hashedPassword)
                 ) {
-                    $stmt->close();
-
                     // Buat ID session baru setelah login berhasil
                     session_regenerate_id(true);
 
-                    // Simpan informasi pengguna
+                    // Simpan data pengguna ke session
                     $_SESSION['user_id'] = $id;
                     $_SESSION['nama'] = $nama;
                     $_SESSION['email'] = $userEmail;
@@ -63,13 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $error = 'Email atau password salah.';
                 }
-            } else {
-                $error = 'Terjadi kesalahan. Silakan coba lagi.';
             }
-
-            $stmt->close();
-        } else {
-            $error = 'Terjadi kesalahan. Silakan coba lagi.';
         }
     }
 }
@@ -100,13 +106,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
 
             <?php if (isset($_GET['registered'])): ?>
-                <div class="alert success">
+                <div class="alert success" role="status">
                     Akun berhasil dibuat. Silakan login.
                 </div>
             <?php endif; ?>
 
             <?php if ($error !== ''): ?>
-                <div class="alert error">
+                <div class="alert error" role="alert">
                     <?= htmlspecialchars(
                         $error,
                         ENT_QUOTES,
@@ -123,12 +129,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id="email"
                     name="email"
                     placeholder="Masukkan email"
-                    autocomplete="email"
                     value="<?= htmlspecialchars(
-                        $_POST['email'] ?? '',
+                        $email,
                         ENT_QUOTES,
                         'UTF-8'
                     ) ?>"
+                    maxlength="150"
+                    autocomplete="email"
                     required
                 >
 
