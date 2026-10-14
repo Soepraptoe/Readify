@@ -1,4 +1,4 @@
-
+```php
 <?php
 session_start();
 
@@ -8,7 +8,7 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Koneksi database
+// Koneksi database Readify
 require_once __DIR__ . '/../config/koneksi.php';
 
 $error = '';
@@ -29,65 +29,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $konfirmasi === ''
     ) {
         $error = 'Semua kolom wajib diisi.';
+    } elseif (strlen($nama) > 100) {
+        $error = 'Nama maksimal 100 karakter.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Format email tidak valid.';
+    } elseif (strlen($email) > 150) {
+        $error = 'Email maksimal 150 karakter.';
     } elseif (strlen($password) < 8) {
         $error = 'Password minimal 8 karakter.';
+    } elseif (strlen($password) > 4096) {
+        $error = 'Password terlalu panjang.';
     } elseif ($password !== $konfirmasi) {
         $error = 'Konfirmasi password tidak cocok.';
     } else {
         // Periksa apakah email sudah terdaftar
         $stmt = $conn->prepare(
-            'SELECT id FROM users WHERE email = ?'
+            'SELECT id FROM users WHERE email = ? LIMIT 1'
         );
 
         if (!$stmt) {
-            $error = 'Terjadi kesalahan saat memeriksa email.';
+            $error = 'Terjadi kesalahan. Silakan coba lagi.';
         } else {
             $stmt->bind_param('s', $email);
-            $stmt->execute();
-            $stmt->store_result();
 
-            $emailAda = $stmt->num_rows > 0;
-            $stmt->close();
-
-            if ($emailAda) {
-                $error = 'Email sudah terdaftar. Gunakan email lain.';
+            if (!$stmt->execute()) {
+                $error = 'Terjadi kesalahan. Silakan coba lagi.';
+                $stmt->close();
             } else {
-                // Amankan password sebelum disimpan
-                $passwordHash = password_hash(
-                    $password,
-                    PASSWORD_DEFAULT
-                );
+                $stmt->store_result();
+                $emailAda = $stmt->num_rows > 0;
+                $stmt->close();
 
-                // Pengguna baru selalu mendapat role user
-                $role = 'user';
-
-                $stmt = $conn->prepare(
-                    'INSERT INTO users (nama, email, password, role)
-                     VALUES (?, ?, ?, ?)'
-                );
-
-                if (!$stmt) {
-                    $error = 'Terjadi kesalahan saat membuat akun.';
+                if ($emailAda) {
+                    $error = 'Email sudah terdaftar. Gunakan email lain.';
                 } else {
-                    $stmt->bind_param(
-                        'ssss',
-                        $nama,
-                        $email,
-                        $passwordHash,
-                        $role
+                    // Hash password sebelum disimpan
+                    $passwordHash = password_hash(
+                        $password,
+                        PASSWORD_DEFAULT
                     );
 
-                    if ($stmt->execute()) {
-                        $stmt->close();
+                    // Akun baru selalu memiliki role user
+                    $role = 'user';
 
-                        header(
-                            'Location: login.php?registered=1'
-                        );
-                        exit;
+                    $stmt = $conn->prepare(
+                        'INSERT INTO users (nama, email, password, role)
+                         VALUES (?, ?, ?, ?)'
+                    );
+
+                    if (!$stmt) {
+                        $error = 'Terjadi kesalahan saat membuat akun.';
                     } else {
-                        $error = 'Registrasi gagal. Silakan coba lagi.';
+                        $stmt->bind_param(
+                            'ssss',
+                            $nama,
+                            $email,
+                            $passwordHash,
+                            $role
+                        );
+
+                        if ($stmt->execute()) {
+                            $stmt->close();
+
+                            header(
+                                'Location: login.php?registered=1'
+                            );
+                            exit;
+                        }
+
+                        // Tangani kemungkinan email duplikat
+                        if ($stmt->errno === 1062) {
+                            $error = 'Email sudah terdaftar. Gunakan email lain.';
+                        } else {
+                            $error = 'Registrasi gagal. Silakan coba lagi.';
+                        }
+
                         $stmt->close();
                     }
                 }
@@ -122,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
 
             <?php if ($error !== ''): ?>
-                <div class="alert error">
+                <div class="alert error" role="alert">
                     <?= htmlspecialchars(
                         $error,
                         ENT_QUOTES,
@@ -171,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     name="password"
                     placeholder="Minimal 8 karakter"
                     minlength="8"
+                    maxlength="4096"
                     autocomplete="new-password"
                     required
                 >
@@ -184,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     name="konfirmasi_password"
                     placeholder="Ulangi password"
                     minlength="8"
+                    maxlength="4096"
                     autocomplete="new-password"
                     required
                 >
@@ -202,3 +220,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 </body>
 </html>
+```
