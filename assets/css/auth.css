@@ -1,183 +1,343 @@
 
-/* ==============================
+/* =========================================
    READIFY - AUTHENTICATION STYLE
-   Login dan Register
-================================ */
+   Minimalist Premium | Cream & Brown
+   Login and Register
+========================================= */
 
-/* Reset */
+/* 1. CSS Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Tampilan dasar */
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #f5f0ff, #fff0f6);
-    color: #302442;
-    min-height: 100vh;
+:root {
+    --cream: #f7f3eb;
+    --cream-dark: #eee6d8;
+    --white: #fffdf9;
+    --brown: #5c4033;
+    --brown-dark: #3e2c25;
+    --brown-light: #8b7060;
+    --beige: #d8c5ad;
+    --border: #e7ddd0;
+    --text: #332820;
+    --text-muted: #8b8177;
+    --success-bg: #edf4e8;
+    --success-text: #42613a;
+    --error-bg: #fbefeb;
+    --error-text: #a44435;
 }
 
-/* Container utama */
+/* 2. Basic Page */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(216, 197, 173, 0.22),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(139, 112, 96, 0.10),
+            transparent 32%
+        ),
+        var(--cream);
+
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* 3. Main Container */
 .auth-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 24px;
+    padding: 48px 24px;
 }
 
-/* Kartu login dan register */
+/* 4. Authentication Card */
 .auth-card {
+    position: relative;
     width: 100%;
-    max-width: 430px;
-    padding: 36px;
-    background-color: #ffffff;
+    max-width: 440px;
+    padding: 44px 40px;
+    background: var(--white);
+    border: 1px solid rgba(231, 221, 208, 0.85);
     border-radius: 20px;
-    box-shadow: 0 12px 40px rgba(74, 42, 112, 0.12);
+
+    box-shadow:
+        0 4px 12px rgba(62, 44, 37, 0.025),
+        0 20px 60px rgba(62, 44, 37, 0.07);
+
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
 }
 
-/* Logo Readify */
+.auth-card:hover {
+    box-shadow:
+        0 8px 20px rgba(62, 44, 37, 0.04),
+        0 24px 65px rgba(62, 44, 37, 0.09);
+}
+
+/* 5. Readify Brand */
 .brand {
     display: inline-block;
-    margin-bottom: 28px;
-    font-size: 30px;
-    font-weight: 800;
-    color: #7138c8;
+    margin-bottom: 30px;
+    color: var(--brown);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -1.5px;
     text-decoration: none;
-    letter-spacing: -1px;
 }
 
 .brand span {
-    color: #ec4899;
+    color: #b58b62;
 }
 
-/* Judul */
+/* 6. Heading */
 .auth-card h1 {
     margin-bottom: 10px;
-    font-size: 27px;
-    font-weight: 700;
-    color: #302442;
+    color: var(--brown-dark);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 29px;
+    font-weight: normal;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
 }
 
-/* Deskripsi */
+/* 7. Subtitle */
 .subtitle {
-    color: #81788e;
+    margin-bottom: 30px;
+    color: var(--text-muted);
     font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 26px;
+    line-height: 1.8;
 }
 
-/* Form */
+/* 8. Form Layout */
 .auth-card form {
     display: flex;
     flex-direction: column;
 }
 
-/* Label input */
+/* 9. Form Labels */
 .auth-card label {
+    display: block;
     margin-bottom: 8px;
-    font-size: 14px;
+    color: var(--brown);
+    font-size: 13px;
     font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
-/* Kolom input */
+/* 10. Input Fields */
 .auth-card input {
     width: 100%;
-    padding: 13px 14px;
-    margin-bottom: 19px;
-    border: 1px solid #ded7e8;
+    min-height: 48px;
+    margin-bottom: 21px;
+    padding: 13px 15px;
+
+    border: 1px solid var(--border);
     border-radius: 10px;
     outline: none;
-    background-color: #ffffff;
-    color: #302442;
+
+    background: #fffefa;
+    color: var(--text);
+    font-family: inherit;
     font-size: 14px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
 }
 
-/* Efek saat input dipilih */
+.auth-card input::placeholder {
+    color: #b3a89c;
+}
+
+.auth-card input:hover {
+    border-color: var(--beige);
+}
+
 .auth-card input:focus {
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+    border-color: var(--brown-light);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(139, 112, 96, 0.10);
 }
 
-/* Tombol login dan register */
+/* 11. Primary Button */
 .auth-button {
+    width: 100%;
+    min-height: 49px;
     margin-top: 5px;
-    padding: 14px;
-    border: none;
+    padding: 14px 18px;
+
+    border: 1px solid var(--brown);
     border-radius: 10px;
-    background-color: #7138c8;
+
+    background: var(--brown);
     color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
-}
 
-/* Efek hover tombol */
-.auth-button:hover {
-    background-color: #5b21b6;
-    transform: translateY(-1px);
-}
-
-/* Pesan error dan sukses */
-.alert {
-    padding: 12px 14px;
-    margin-bottom: 20px;
-    border-radius: 9px;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.alert.error {
-    background-color: #fff0f0;
-    color: #b42318;
-    border: 1px solid #ffd2d2;
-}
-
-.alert.success {
-    background-color: #ecfdf3;
-    color: #027a48;
-    border: 1px solid #abefc6;
-}
-
-/* Teks navigasi login/register */
-.auth-footer {
-    margin-top: 24px;
-    text-align: center;
+    font-family: inherit;
     font-size: 14px;
-    color: #81788e;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+.auth-button:hover {
+    background: var(--brown-dark);
+    border-color: var(--brown-dark);
+    box-shadow: 0 6px 16px rgba(62, 44, 37, 0.16);
+    transform: translateY(-2px);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.auth-button:focus-visible {
+    outline: 3px solid var(--beige);
+    outline-offset: 3px;
+}
+
+/* 12. Error and Success Messages */
+.alert {
+    margin-bottom: 22px;
+    padding: 13px 15px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    font-size: 13px;
     line-height: 1.7;
 }
 
-/* Link login/register */
+.alert.error {
+    background: var(--error-bg);
+    border-color: #efd8d1;
+    color: var(--error-text);
+}
+
+.alert.success {
+    background: var(--success-bg);
+    border-color: #d9e6d0;
+    color: var(--success-text);
+}
+
+/* 13. Login and Register Links */
+.auth-footer {
+    margin-top: 27px;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: center;
+}
+
 .auth-footer a {
-    color: #7138c8;
+    color: var(--brown);
     font-weight: 700;
     text-decoration: none;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
 }
 
 .auth-footer a:hover {
+    color: #a07852;
     text-decoration: underline;
 }
 
-/* Tampilan layar HP */
-@media (max-width: 480px) {
+/* 14. Selection Color */
+::selection {
+    background: #dfcdb8;
+    color: var(--brown-dark);
+}
+
+/* 15. Responsive Tablet */
+@media (max-width: 768px) {
     .auth-container {
-        padding: 16px;
+        padding: 32px 20px;
     }
 
     .auth-card {
-        padding: 26px 22px;
-    }
-
-    .auth-card h1 {
-        font-size: 24px;
+        max-width: 420px;
+        padding: 36px 30px;
     }
 
     .brand {
-        font-size: 28px;
+        font-size: 33px;
+    }
+
+    .auth-card h1 {
+        font-size: 27px;
+    }
+}
+
+/* 16. Responsive Mobile */
+@media (max-width: 480px) {
+    body {
+        background: var(--cream);
+    }
+
+    .auth-container {
+        padding: 20px 14px;
+    }
+
+    .auth-card {
+        padding: 30px 22px;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(62, 44, 37, 0.06);
+    }
+
+    .brand {
+        margin-bottom: 25px;
+        font-size: 31px;
+    }
+
+    .auth-card h1 {
+        font-size: 25px;
+    }
+
+    .subtitle {
+        margin-bottom: 25px;
+        font-size: 13px;
+    }
+
+    .auth-card input {
+        min-height: 46px;
+        margin-bottom: 18px;
+    }
+
+    .auth-button {
+        min-height: 47px;
+    }
+}
+
+/* 17. Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
     }
 }
