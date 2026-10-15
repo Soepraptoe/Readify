@@ -1,5 +1,8 @@
 <?php
-require_once "../config/koneksi.php";
+require_once __DIR__ . '/../auth/admin_check.php';
+require_once __DIR__ . '/../config/koneksi.php';
+
+// Kode dashboard yang sudah ada dilanjutkan di bawah sini
 
 // Menghitung jumlah buku
 $queryBuku = mysqli_query($conn, "SELECT COUNT(*) AS total FROM books");
@@ -150,15 +153,21 @@ $totalGenre = $dataGenre["total"];
 
         <h2>Menu Pengelolaan</h2>
 
-        <div class="aksi">
-            <a class="tombol" href="buku.php">
-                Kelola Buku
-            </a>
+        
+    <div class="aksi">
+        <a class="tombol" href="buku.php">
+            Kelola Buku
+        </a>
 
-            <a class="tombol tombol-sekunder" href="tambahBuku.php">
-                + Tambah Buku
-            </a>
-        </div>
+        <a class="tombol tombol-sekunder" href="tambahBuku.php">
+            + Tambah Buku
+        </a>
+
+        <a class="tombol" href="../auth/logout.php">
+            Logout
+        </a>
+    </div>
+
     </main>
 
 </body>

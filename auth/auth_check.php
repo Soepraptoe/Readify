@@ -1,4 +1,3 @@
-```php
 <?php
 // Memulai session jika belum aktif
 if (session_status() === PHP_SESSION_NONE) {
@@ -7,8 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Memeriksa status login pengguna
 if (!isset($_SESSION['user_id'])) {
-    // Arahkan pengguna yang belum login ke halaman login
-    header('Location: login.php');
+    // Arahkan ke halaman login Readify
+    header('Location: /Readify/auth/login.php');
     exit;
 }
-```

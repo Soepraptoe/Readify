@@ -1,7 +1,10 @@
 
 <?php
-require_once __DIR__ . '/config/koneksi.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+require_once __DIR__ . '/config/koneksi.php';
 function e($value) {
     return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
 }
@@ -105,14 +108,31 @@ $jumlahBuku = mysqli_num_rows($hasilBuku);
 </head>
 <body>
 
+
 <nav class="navbar">
     <a href="index.php" class="logo">Readify<span>.</span></a>
+
     <div class="readify-nav-links">
         <a href="index.php">Beranda</a>
         <a href="#koleksi">Koleksi Buku</a>
         <a href="#kategori">Kategori</a>
+
+        <?php if (isset($_SESSION['user_id'])): ?>
+
+            <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
+                <a href="admin/index.php">Dashboard Admin</a>
+            <?php endif; ?>
+
+            <a href="auth/logout.php">Logout</a>
+
+        <?php else: ?>
+
+            <a href="auth/login.php">Login</a>
+
+        <?php endif; ?>
     </div>
 </nav>
+
 
 <header class="hero">
     <div class="hero-text">
